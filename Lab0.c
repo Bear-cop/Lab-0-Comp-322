@@ -1,4 +1,4 @@
 #include <stdio.h>
 	int main(){
-		printf("This is where my code will go");
+		printf("Original ASCII Decimal Parity T. Error\n -------- -------- -------- -------- --------");
 	}
