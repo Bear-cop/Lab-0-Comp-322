@@ -1,6 +1,4 @@
 #include <stdio.h>
-	
 	int main(){
-		printf("This will be my code one day");	
-		return 0;
+		printf("This is where my code will go");
 	}
