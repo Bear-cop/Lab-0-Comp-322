@@ -1,63 +1,177 @@
 #include <stdio.h>
+#include <ctype.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
-#define bool int
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <math.h>
 
-void DecodeText(char *num) {
-    printf("% 8s",num);
-    printf("% 8c",ConvertD(num));
-    printf("% 8d",ConvertD(num));
-    printf("% 8s", getParity(ConvertD(num)) ? "odd" : "even");
-    printf("\n");
-}
-int ConvertD(char *n) {
-    int convertD = 0, i = 0, remainder;
-    int count = atoi(n);
-    while (count != 0) {
-        remainder = count % 10;
-        count /= 10;
-        convertD += remainder * pow(2, i);
-        ++i;
-    }
-    return convertD;
-
-}
-
-bool getParity(unsigned int n) {
-    bool parity = 0;
-    while (n) {
-        parity = !parity;
-        n = n & (n - 1);
-    }
-    return parity;
-}
-int main(int argc, char** argv) {
-    char num[100];
-    char temp[10000];
-    
-    printf("Enter file name \n");
-    gets(temp);
-        printf("BINARY    ASCII   DECIMAL  PARITY\n");
-    FILE *fileL = fopen(temp, "r"); \
-
-    if (fileL == NULL) {\
-        printf("Could not find file\n");
-        exit(-1);
-    }
-    while (fscanf(fileL, "%s", & num) == 1) {
-        char buffer[9];
-        int length;
-        snprintf(buffer, 9, "%s", num);
-        length = strlen(buffer);
-
-        for (int i = length; i < 8; i++) {
-            buffer[i] = '0';
-        }
-      DecodeText(buffer);
-    }
-   return (EXIT_SUCCESS);
-}
-
-
-
+int main(int argc, char *argv[]) {
+	    
+	int fd;
+	int decequiv;
+	size_t c;
+	int counter;
+	char *filename;
+	char *str1;
+	str1 = (char*)malloc(1500);
+	memset(str1, '\0', sizeof(char)*1500);	
+	char *str;
+	str = (char*)malloc(9);
+	char *token;
+	char asciibuffer[2] = "0";
+	char ascii[6] = "0";
+	char parity[5];
+	char *unprintables[] = {
+		"NUL", "SOH", "STX", "ETX", "EOT", "ENQ", "ACK", "BEL",
+		" BS", " HT", " LF", " VT", " FF", " CR", " SO", " SI",
+		"DLE", "DC1", "DC2", "DC3", "DC4", "NAK", "SYN", "ETB",
+		"CAN", " EM", "SUB", "ESC", " FS", " GS", " RS", " US",
+		"space", "DEL"};
+	filename = argv[1];
+	fd = open(filename, O_RDONLY);
+	if(argc < 2) {
+		printf("Error: No filename or binary value inputted.");
+		return 0;
+	}
+	if(fd == -1) {
+		if(strcmp(argv[1], "-") == 0){
+			if (argc == 2){
+				printf("Error: No filename or binary value inputted.");
+				return 0;
+			}
+			strcat(str1, argv[2]);
+			for(int i = 3; i < argc; i++){
+				strcat(str1, " ");
+				strcat(str1, argv[i]);
+			}
+		}
+		else{
+			strcat(str1, argv[1]);
+			for(int i = 2; i < argc; i++){
+				strcat(str1, " ");
+				strcat(str1, argv[i]);
+			}
+		}
+		printf("Original\tASCII\t\tDecimal\t\tParity\n");
+		printf("--------\t--------\t--------\t--------\n");
+		token = strtok(str1, " ");
+		while(token != NULL) {
+			while(strlen(token) > 0) {
+				if (strlen(token) > 8){
+					strncpy(str, token, 8);
+					else{
+						strncpy(str, token, strlen(token));
+					}
+					if(strlen(str) < 8) {
+						for(size_t i = 0; i < (8 - strlen(token)); i++){
+							strcat(str, "0");
+						}
+					}
+					*(str + 8) = 0;
+					for(c = 0, decequiv = 0, counter = 0; c < strlen(str); c++) {	
+						if(str[strlen(str) - (c + 1)] == 49) {
+							decequiv += 1*(pow(2,c));
+							counter++;
+						}
+						if(decequiv >= 128) {
+							decequiv -= 128;
+							if(isascii(decequiv)){
+								if(decequiv == 127){
+									strncpy(ascii, unprintables[33], 4);
+								}
+								else if(decequiv == 32) {
+									strncpy(ascii, unprintables[decequiv], 6);
+								}
+								else if(decequiv < 32){
+									strncpy(ascii, unprintables[decequiv], 4);
+								}
+								else{
+									asciibuffer[0] = decequiv;
+									strncpy(ascii, &asciibuffer[0], 2);
+								}
+							}
+							if(counter % 2 == 0){
+								strncpy(parity, "EVEN", 5);
+							}
+							else{
+								strncpy(parity, "ODD", 4);
+							}
+							printf("%s\t%s\t\t%d\t\t%s\n", str, ascii, decequiv, parity);
+							memset(ascii, '\0', sizeof(char)*6);
+							if(strlen(token) > 8){
+								token = token + 8;
+							}
+							else{
+								token = token + strlen(token);
+							}
+							memset(str,0,8*sizeof(str[0]));
+						}
+						token = strtok(NULL, " ");
+					}
+				}
+				else{
+					read(fd, str1, 1500);
+					token = strtok(str1, " ");
+					printf("Original\tASCII\t\tDecimal\t\tParity\n");
+					printf("--------\t--------\t--------\t--------\n");
+					while(token != NULL) {
+						while(strlen(token) > 0) {
+							if (strlen(token) > 8){
+								strncpy(str, token, 8);
+							}
+							else{
+								strncpy(str, token, strlen(token));
+							}
+							if(strlen(str) < 8) {
+								for(size_t i = 0; i < (8 - strlen(token)); i++){
+									strcat(str, "0");
+								}
+								*(str + 8) = 0;
+								for(c = 0, decequiv = 0, counter = 0; c < strlen(str); c++) {	
+									if(str[strlen(str) - (c + 1)] == 49) {
+										decequiv += 1*(pow(2,c));
+										counter++;
+									}
+								}
+								if(decequiv >= 128) {
+									decequiv -= 128;
+								}
+								if(isascii(decequiv)){
+									if(decequiv == 127){
+										strncpy(ascii, unprintables[33], 4);
+									}
+									else if(decequiv == 32) {
+										strncpy(ascii, unprintables[decequiv], 6);
+									}
+									else if(decequiv < 32){
+										strncpy(ascii, unprintables[decequiv], 4);
+									}
+									else{
+										asciibuffer[0] = decequiv;
+										strncpy(ascii, &asciibuffer[0], 2);
+									}
+								}
+								if(counter % 2 == 0) {
+									strncpy(parity, "EVEN", 5);
+								}
+								else{
+									strncpy(parity, "ODD", 4);
+								}
+								printf("%s\t%s\t\t%d\t\t%s\n", str, ascii, decequiv, parity);
+								if(strlen(token) > 8){
+									token = token + 8;
+								}
+								else{
+									token = token + strlen(token);
+								}
+								memset(str,0,8*sizeof(str[0]));
+							}
+							token = strtok(NULL, " ");
+						}
+					}
+					free(str1);
+					free(str);
+					return 0;
+				}
