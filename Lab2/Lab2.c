@@ -5,5 +5,6 @@
 int main(){
 
 	fork();
+	fprintf(stderr,"Hello");
 
 }
