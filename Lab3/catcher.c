@@ -7,6 +7,8 @@
 #include <string.h>
 #include <time.h> 
 
+time_t sec;
+static int term = 0;
 static int count = 0;
 static char* SIGS[27] = {"HUP", "INT", "QUIT", "ILL", "TRAP",
                          "ABRT", "BUS", "FPE", "KILL", "USR1",
@@ -15,15 +17,16 @@ static char* SIGS[27] = {"HUP", "INT", "QUIT", "ILL", "TRAP",
                          "TTIN", "TTOUT", "URG", "XCPU", "XFSZ",
                          "VTALRM", "PROF", "WINCH"};
 
-void sigHandler(int sig){
-  
-  
-  
-}
-
 
 void sigCatch(int sig){
-  
+  time(&sec);
+
+  if(n == 15) {
+        term++;
+    }
+  else{
+        term = 0;
+    }
   
   
 }
@@ -31,8 +34,6 @@ void sigCatch(int sig){
 int main(int argc, char **argv){
 pid_t pid;
 
-time_t sec;
-time(&sec);
 
   
   retrun 0;
