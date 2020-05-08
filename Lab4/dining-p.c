@@ -9,7 +9,8 @@
 #include <sys/mman.h>
 #include <signal.h>
 
-
+#define chopstick1
+#define chopstick2
 int end = 0;
 int ph;
 
@@ -25,16 +26,16 @@ void think(int num){
 }
 
 
-void deallocate(sem_t* chopstick[], char left[], char right[]){
+void deallocate(sem_t* right, sem_t* left){
 
-	sem_close(chopstick[0]);
-	sem_close(chopstick[1]);
+	sem_close(right);
+	sem_close(left);
 
-	sem_unlink(left);
-	sem_unlink(right);
+	sem_unlink(chopstick1);
+	sem_unlink(chopstick2);
 
-	sem_destroy(chopstick[0]);
-	sem_destroy(chopstick[1]);
+	sem_destroy(right);
+	sem_destroy(left);
 
 }
 
@@ -57,9 +58,6 @@ int main(int argc, char** argv){
 	sem_t* left;
 	sem_t* right;
 	char place[50];
-	
-	char chopstick1[50];
-	char chopstick2[50];
 
 	strcpy(left, "/");
 	strcat(left, argv[2]);
@@ -86,12 +84,14 @@ int main(int argc, char** argv){
 			cycles++;
 			}while(end);
 		 if(end !=1 ){
-			 fprintf(stderr, "Philosopher #%d completed cycle runs.\n",position, cycles);
+			 fprintf(stdout, "Philosopher #%d completed cycle runs.\n",position, cycles);
 		 }
-		 
+		 deallocate(left,right);
 	 }
-		deallocate(chopstick1, left, right);
-		deallocate(chopstick2, left, right);
+	
+	else{
+		fprintf(stderr,"Enter more seats and positions");
+	}
 		 return EXIT_SUCCESS;
 }
 
