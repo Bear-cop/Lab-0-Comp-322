@@ -13,19 +13,17 @@
 int end = 0;
 int ph;
 
-void eating(){
-	srand(time(0));
-	int random = rand() % (1000000 + 1 - 0) + 0;
-	usleep(random);
-	printf("Philosopher %d is eating.\n", ph);
+void eat(int num){
+	fprintf(stdout, "Philosopher #%d is eating\n", num);
+  usleep(rand());
 }
 
-void thinking(){
-	srand(time(0));
-	int random = rand() % (1000000 + 1 - 0) + 0;
-	usleep(random);
-	printf("Philosopher %d is thinking.\n", ph);
+
+void think(int num){
+	fprintf(stdout, "Philosopher #%d is thinking\n", num);
+	usleep(rand());
 }
+
 
 void deallocate(sem_t* chopstick[], char left[], char right[]){
 
@@ -42,9 +40,9 @@ void deallocate(sem_t* chopstick[], char left[], char right[]){
 
 void signalHandler(int sig){
 //reregister signal handler
-	signal(SIGTERM, sig_handler);
+	signal(SIGTERM, signalHandler);
 	printf("SIGTERM (%d) received...\n", sig);
-	stop = 1;
+	end = 1;
 }
 
 
@@ -72,7 +70,7 @@ int main(int argc, char** argv){
 	 if(seats < position) {
           	  printf("Error: not enough seats\n");
          }else{
-		cycle = 0;
+		cycles = 0;
 		signal(SIGTERM, signalHandler);
 		right = sem_open(chopstick1, O_CREAT,0660, 1);
 		left = sem_open(chopstick2, O_CREAT,0660, 1);
@@ -86,7 +84,7 @@ int main(int argc, char** argv){
 			sem_post(left);
 			think(position);
 			cycles++;
-			}while(stop);
+			}while(end);
 		 if(stop !=1 ){
 			 fprintf(stderr, "Philosopher #%d completed cycle runs.\n",position, cycles);
 		 }
