@@ -85,7 +85,7 @@ int main(int argc, char** argv){
 			think(position);
 			cycles++;
 			}while(end);
-		 if(stop !=1 ){
+		 if(end !=1 ){
 			 fprintf(stderr, "Philosopher #%d completed cycle runs.\n",position, cycles);
 		 }
 		 
