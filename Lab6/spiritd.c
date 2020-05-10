@@ -1,3 +1,6 @@
+//Ricardo Carrillo 
+//05/09/2020
+//Lab 6: Wack A Mole
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -9,17 +12,28 @@
 #include <fcntl.h>
 #include <string.h>
 
-void signalHandler(){
+
+
+void signalHandler(int sig){
   
   
   
 }
 
 
-int main(){
+int main(int argc, char **argv){
+  pid_t mole;
+  umask(0);
+  mole = fork();
   
+  if(mole < 0){
+   return EXIT_SUCCESS; 
+  }
+  else if(mole == 0){
+    
+    
+    
+  }
   
-  
-  
-  
+  return EXIT_SUCCESS
 }
