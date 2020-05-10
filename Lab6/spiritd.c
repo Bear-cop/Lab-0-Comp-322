@@ -26,7 +26,7 @@ int main(int argc, char **argv){
   umask(0);
   mole = fork();
   
-  if(mole < 0){
+  if(mole > 0){
    return EXIT_SUCCESS; 
   }
   else if(mole == 0){
