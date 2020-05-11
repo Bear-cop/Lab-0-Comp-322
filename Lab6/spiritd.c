@@ -18,6 +18,9 @@
 void signalHandler();
 char* mDirect;
 
+//This method Handles signal and kills signal when 
+//specific signals and processes are invoked
+//it also creates mole processes
 void signalHandler(int sig){
   signal(sig, signalHandler);
   char *mole;
@@ -60,10 +63,14 @@ void signalHandler(int sig){
 	return 0;
 }
 
-
+//in the main method it creates pathing so 
+// we know where lab6.log is created at our home
+//also gives Dameon process.
+//p.s it opens and closes all file descriptors and hands
+//them off to devnull
 int main(){
   pid_t mole;
-  char hDirect [PATH_MAX], buffer[4096];
+  char hDirect [PATH_MAX];
   int devnull;
   struct rlimit rlim;
  	
