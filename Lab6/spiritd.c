@@ -57,9 +57,9 @@ int main(int argc, char **argv){
 	}
 	
   devnull = open("/dev/null", O_RWDR);
-	dup(devnull, 0);
-  	dup(devnull, 1);
-	dup(devnull, 2);
+	dup2(devnull, 0);
+  	dup2(devnull, 1);
+	dup2(devnull, 2);
 
 	while(1){
 		pause();
