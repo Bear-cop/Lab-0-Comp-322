@@ -68,16 +68,20 @@ int main(){
   mole = fork();
   
   if(mole > 0){
-   return EXIT_SUCCESS; 
-  }
-  else if(mole == 0){
-  umask(0);  
-  //getsid();
-  getcwd(mDirect, sizeof(mDirect));
-  strcat(mDirect, "/mole");
-  chdir("/");
-    
-  
+	  
+   exit(0); 
+	
+	  
+  }else if(mole == 0){
+      umask(0);  
+  	getcwd(mDirect, sizeof(mDirect));
+  	strcat(mDirect, "/mole");
+      getsid(); 
+      chdir("/");
+  	printf("Daemon pid:", getpid());
+  	strcat(hDirect, getenv("HOME"));
+  	strcat(hDirect, "/lab6.log");
+	  
   return EXIT_SUCCESS;
   }
   
