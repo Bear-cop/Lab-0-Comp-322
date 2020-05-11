@@ -15,6 +15,7 @@
 #include <string.h>
 #include <sys/wait.h>
 
+void signalHandler();
 char* mDirect;
 
 void signalHandler(int sig){
@@ -23,11 +24,13 @@ void signalHandler(int sig){
   pid_t ppid;
   pid_t cpid;
   int random;	
+	
   if(!(ppid == 0)){
-   return EXIT_FAILURE; 
+   kill(ppid, SIGKILL);
   }
+	
   if(sig == SIGTERM){
-  return EXIT_SUCCESS;
+  kill(getpid(), SIGKILL);
   }
   random = (rand()%2);
   char args[3];		
@@ -82,7 +85,7 @@ int main(){
   	strcat(hDirect, getenv("HOME"));
   	strcat(hDirect, "/lab6.log");
 	if((open(hDirect, O_CREAT, 0770)) == -1){  
-		printf("ERROR");
+		printf("ERROR cant reach Home Directory");
   		return EXIT_FAILURE;
 	}
   }
