@@ -12,12 +12,13 @@
 #include <fcntl.h>
 #include <string.h>
 
-
+char* mDirect;
 
 void signalHandler(int sig){
   signal(sig, signalHandler);
   char *mole;
   pid_t ppid;
+  pid_t cpid;
   int rand;	
   if(!(ppid == 0)){
    return EXIT_FAILURE; 
@@ -28,14 +29,24 @@ void signalHandler(int sig){
   rand = rand()%2;
   char args[3];		
   if(rand == 1){
-	  //mole = 1;
+	  mole = "mole1"; 
+	  cpid = fork();
 	  if(sig == SIGUSR1){
-	  ppid = fork();
+		if(cpid == 0){
+			args[0] = mDirect;
+			args[1] = mole;
+			args[2] = NULL;
+		}
 	  }
   }else {
-	//mole = 2;
+	mole = "mole2";
+	  cpid = fork();
 	  if(sig == SIGUSR2){
-	  ppid = fork();
+	  	if(cpid == 0){
+			args[0] = mDirect;
+			args[1] = mole;
+			args[2] = NULL;
+		}
 	  }
   }
 	return 0;
