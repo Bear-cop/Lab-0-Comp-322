@@ -55,19 +55,24 @@ void signalHandler(int sig){
 }
 
 
-int main(int argc, char **argv){
+int main(){
   pid_t mole;
+  char hDirect [PATH_MAX], buffer[4096];
   int devnull;
   struct rlimit rlim;
-  umask(0);
+ 	
+	
   mole = fork();
   
   if(mole > 0){
    return EXIT_SUCCESS; 
   }
   else if(mole == 0){
-    
-    
+  umask(0);  
+  getsid();
+  getcwd(mDirect, sizeof(mDirect));
+  strcat(mDirect, "/mole");
+  chdir("/");
     
   
   return EXIT_SUCCESS;
