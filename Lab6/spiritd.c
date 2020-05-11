@@ -22,7 +22,7 @@ void signalHandler(int sig){
   char *mole;
   pid_t ppid;
   pid_t cpid;
-  int rand;	
+  int random;	
   if(!(ppid == 0)){
    return EXIT_FAILURE; 
   }
