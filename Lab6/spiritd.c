@@ -26,11 +26,17 @@ void signalHandler(int sig){
   return EXIT_SUCCESS;
   }
   rand = rand()%2;
+  char args[3];		
   if(rand == 1){
 	  //mole = 1;
-	  
+	  if(sig == SIGUSR1){
+	  ppid = fork();
+	  }
   }else {
-	//mole = 2;	  
+	//mole = 2;
+	  if(sig == SIGUSR2){
+	  ppid = fork();
+	  }
   }
 	return 0;
 }
