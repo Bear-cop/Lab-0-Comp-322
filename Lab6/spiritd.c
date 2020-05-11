@@ -2,15 +2,18 @@
 //05/09/2020
 //Lab 6: Wack A Mole
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <signal.h>
-#include <stdlib.h>
-#include <sys/time.h>
 #include <sys/resource.h>
 #include <fcntl.h>
+#include <signal.h>
+#include <time.h>
+#include <syslog.h>
+#include <limits.h> 
 #include <string.h>
+#include <sys/wait.h>
 
 char* mDirect;
 
