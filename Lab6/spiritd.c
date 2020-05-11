@@ -36,6 +36,7 @@ void signalHandler(int sig){
 			args[0] = mDirect;
 			args[1] = mole;
 			args[2] = NULL;
+			execve(args[0], args, NULL);
 		}
 	  }
   }else {
@@ -46,6 +47,7 @@ void signalHandler(int sig){
 			args[0] = mDirect;
 			args[1] = mole;
 			args[2] = NULL;
+			execve(args[0], args, NULL);
 		}
 	  }
   }
@@ -90,5 +92,7 @@ int main(int argc, char **argv){
 		pause();
 	}
 	
-  return 0;
+	signal(SIGTERM, signalHandler);
+	signal(SIGUSR1, signalHandler);
+	signal(SIGUSR2, signalHandler);	
 }
