@@ -26,9 +26,9 @@ void signalHandler(int sig){
   if(sig == SIGTERM){
   return EXIT_SUCCESS;
   }
-  rand = rand()%2;
+  random = (rand()%2);
   char args[3];		
-  if(rand == 1){
+  if(random == 1){
 	  mole = "mole1"; 
 	  cpid = fork();
 	  if(sig == SIGUSR1){
@@ -69,7 +69,7 @@ int main(){
   }
   else if(mole == 0){
   umask(0);  
-  getsid();
+  //getsid();
   getcwd(mDirect, sizeof(mDirect));
   strcat(mDirect, "/mole");
   chdir("/");
@@ -88,7 +88,7 @@ int main(){
 	close(i);
 	}
 	
-  devnull = open("/dev/null", O_RWDR);
+  devnull = open("/dev/null", O_RDWR);
 	dup2(devnull, 0);
   	dup2(devnull, 1);
 	dup2(devnull, 2);
