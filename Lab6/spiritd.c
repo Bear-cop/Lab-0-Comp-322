@@ -16,15 +16,23 @@
 
 void signalHandler(int sig){
   signal(sig, signalHandler);
-  pid_t mole;
-  if(!(mole == 0)){
+  char *mole;
+  pid_t ppid;
+  int rand;	
+  if(!(ppid == 0)){
    return EXIT_FAILURE; 
   }
-  
   if(sig == SIGTERM){
   return EXIT_SUCCESS;
   }
-  
+  rand = rand()%2;
+  if(rand == 1){
+	  //mole = 1;
+	  
+  }else {
+	//mole = 2;	  
+  }
+	return 0;
 }
 
 
