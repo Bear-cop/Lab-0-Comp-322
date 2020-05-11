@@ -76,13 +76,15 @@ int main(){
       umask(0);  
   	getcwd(mDirect, sizeof(mDirect));
   	strcat(mDirect, "/mole");
-      getsid(); 
+      setsid(); 
       chdir("/");
   	printf("Daemon pid:", getpid());
   	strcat(hDirect, getenv("HOME"));
   	strcat(hDirect, "/lab6.log");
-	  
-  return EXIT_SUCCESS;
+	if((open(hDirect, O_CREAT, 0770)) == -1){  
+		printf("ERROR");
+  		return EXIT_FAILURE;
+	}
   }
   
   getrlimit(RLIMIT_NOFILE, &rlim);
