@@ -30,6 +30,7 @@ void signalHandler(int sig){
 
 int main(int argc, char **argv){
   pid_t mole;
+  int devnull;
   struct rlimit rlim;
   umask(0);
   mole = fork();
@@ -54,6 +55,15 @@ int main(int argc, char **argv){
 	for(unsigned int i = 0; i < rlim.rlim_max; i++){
 	close(i);
 	}
-  
+	
+  devnull = open("/dev/null", O_RWDR);
+	dup(devnull, 0);
+  	dup(devnull, 1);
+	dup(devnull, 2);
+
+	while(1){
+		pause();
+	}
+	
   return 0;
 }
