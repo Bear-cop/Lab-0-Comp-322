@@ -30,6 +30,7 @@ void signalHandler(int sig){
 
 int main(int argc, char **argv){
   pid_t mole;
+  struct rlimit rlim;
   umask(0);
   mole = fork();
   
@@ -40,7 +41,19 @@ int main(int argc, char **argv){
     
     
     
+  
+  return EXIT_SUCCESS;
   }
   
-  return EXIT_SUCCESS
+  getrlimit(RLIMIT_NOFILE, &rlim);
+  
+	if(rlim.rlim_max == RLIM_INFINITY){
+	rlim.rlim_max = 1024;
+	}
+  
+	for(unsigned int i = 0; i < rlim.rlim_max; i++){
+	close(i);
+	}
+  
+  return 0;
 }
