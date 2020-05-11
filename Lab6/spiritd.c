@@ -15,8 +15,15 @@
 
 
 void signalHandler(int sig){
+  signal(sig, signalHandler);
+  pid_t mole;
+  if(!(mole == 0)){
+   return EXIT_FAILURE; 
+  }
   
-  
+  if(sig == SIGTERM){
+  return EXIT_SUCCESS;
+  }
   
 }
 
